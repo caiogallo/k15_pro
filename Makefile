@@ -1,11 +1,12 @@
 IMAGE_NAME:=qmk_builder
-DOCKER_RUN:=docker run --rm -it -v ./qmk_firmware:/home/builder/qmk_firmware $(IMAGE_NAME)
+DOCKER_RUN:=docker run --rm -it -v .:/home/builder $(IMAGE_NAME)
 INSTALL_PYTHON_DEPS:=python3 -m pip install --user -r requirements.txt --break-system-packages
 KEYBOARD_MODEL:=keychron/k15_max/ansi_encoder/rgb
+KEYBOARD_KEYMAP:=default
 
 default: help
 
-build-docker-file:
+build-dockerfile:
 	docker build . -t $(IMAGE_NAME)
 
 update-git-submodule:
@@ -18,10 +19,15 @@ list-keyboards:
 	$(DOCKER_RUN) bash -c "$(INSTALL_PYTHON_DEPS) && make list-keyboards | tr ' ' '\n'"
 
 build-firmware:
-	$(DOCKER_RUN) bash -c "$(INSTALL_PYTHON_DEPS) && make $(KEYBOARD_MODEL)"
+	$(DOCKER_RUN) bash -c "$(INSTALL_PYTHON_DEPS) && make qmk build -kb $(KEYBOARD_MODEL) -km $(KEYBOARD_KEYMAP)"
 
 flash-firmware:
-	$(DOCKER_RUN) bash -c "$(INSTALL_PYTHON_DEPS) && qmk flash -kb $(KEYBOARD_MODEL) -km default"
+	$(DOCKER_RUN) bash -c "$(INSTALL_PYTHON_DEPS) && qmk flash -kb $(KEYBOARD_MODEL) -km $(KEYBOARD_KEYMAP)"
+
+clean:
+	@rm -rf qmk_firmware/.build
+	@rm -rf qmk_firmware/*bin
+	@docker image rm $(IMAGE_NAME)
 
 help:
 	@echo 
