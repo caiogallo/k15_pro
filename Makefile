@@ -20,20 +20,22 @@ list-keyboards:
 build-firmware:
 	$(DOCKER_RUN) bash -c "$(INSTALL_PYTHON_DEPS) && make $(KEYBOARD_MODEL)"
 
+flash-firmware:
+	$(DOCKER_RUN) bash -c "$(INSTALL_PYTHON_DEPS) && qmk flash -kb $(KEYBOARD_MODEL) -km default"
 
 help:
 	@echo 
-	@echo Makefile to help building Keychron K15 PRO
+	@echo "Makefile to help building Keychron K15 PRO"
 	@echo
-	@echo To avoid installing all tools, you can use a docker image. To build this docker image use
-	@echo    make build-docker-file
+	@echo "To avoid installing all tools, you can use a docker image. To build this docker image use"
+	@echo "   make build-docker-file"
 	@echo
-	@echo After this, to update all submodules from qmk_firmware and avoid dependency errors, use the command
-	@echo    make update-git-submodule
+	@echo "After this, to update all submodules from qmk_firmware and avoid dependency errors, use the command"
+	@echo "   make update-git-submodule"
 	@echo
-	@echo Finally, to build the firmware run 
-	@echo    make build-firmware
+	@echo "Finally, to build the firmware run "
+	@echo "   make build-firmware"
 	@echo
 	@echo
-	@echo Optional steps
-	@echo You can easily connect to the container using make interactive-container and list all supported keyboards using make list-keyboards
+	@echo "Optional steps"
+	@echo "You can easily connect to the container using make interactive-container and list all supported keyboards using make list-keyboards"
