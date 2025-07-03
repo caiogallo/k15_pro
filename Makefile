@@ -19,7 +19,7 @@ list-keyboards:
 	$(DOCKER_RUN) bash -c "$(INSTALL_PYTHON_DEPS) && make list-keyboards | tr ' ' '\n'"
 
 build-firmware:
-	$(DOCKER_RUN) bash -c "$(INSTALL_PYTHON_DEPS) && make qmk build -kb $(KEYBOARD_MODEL) -km $(KEYBOARD_KEYMAP)"
+	$(DOCKER_RUN) bash -c "$(INSTALL_PYTHON_DEPS) && qmk clean && qmk compile -kb $(KEYBOARD_MODEL) -km $(KEYBOARD_KEYMAP)"
 
 flash-firmware:
 	$(DOCKER_RUN) bash -c "$(INSTALL_PYTHON_DEPS) && qmk flash -kb $(KEYBOARD_MODEL) -km $(KEYBOARD_KEYMAP)"
@@ -27,6 +27,7 @@ flash-firmware:
 clean:
 	@rm -rf qmk_firmware/.build
 	@rm -rf qmk_firmware/*bin
+	$(DOCKER_RUN) bash -c "$(INSTALL_PYTHON_DEPS) && qmk clean"
 	@docker image rm $(IMAGE_NAME)
 
 help:
