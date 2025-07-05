@@ -19,10 +19,10 @@ list-keyboards:
 	$(DOCKER_RUN) bash -c "$(INSTALL_PYTHON_DEPS) && make list-keyboards | tr ' ' '\n'"
 
 build-firmware:
-	$(DOCKER_RUN) bash -c "$(INSTALL_PYTHON_DEPS) && qmk clean && qmk compile -kb $(KEYBOARD_MODEL) -km $(KEYBOARD_KEYMAP)"
+	$(DOCKER_RUN) bash -c "$(INSTALL_PYTHON_DEPS) && sudo mkdir -p /etc/udev/rules.d && sudo cp /home/builder/qmk_firmware/util/udev/50-qmk.rules /etc/udev/rules.d/ && qmk clean && qmk doctor -y && qmk compile -kb $(KEYBOARD_MODEL) -km $(KEYBOARD_KEYMAP)"
 
 flash-firmware:
-	$(DOCKER_RUN) bash -c "$(INSTALL_PYTHON_DEPS) && qmk flash -kb $(KEYBOARD_MODEL) -km $(KEYBOARD_KEYMAP)"
+	$(DOCKER_RUN) bash -c "$(INSTALL_PYTHON_DEPS) && qmk doctor -y && qmk flash -kb $(KEYBOARD_MODEL) -km $(KEYBOARD_KEYMAP)"
 
 clean:
 	@rm -rf qmk_firmware/.build

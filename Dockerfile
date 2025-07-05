@@ -19,6 +19,8 @@ RUN apt-get update && apt-get install -y \
 
 RUN pip3 install qmk --break-system-packages
 
+RUN python3 -m pip config set global.break-system-packages true
+
 RUN useradd -ms /bin/bash builder && \
     echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
